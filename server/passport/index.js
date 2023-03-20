@@ -9,15 +9,16 @@ passport.use(
       {
         clientID: process.env['GOOGLE_CLIENT_ID'],
         clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
-        callbackURL: `/redirect/google`,
+        callbackURL: '/auth/google/callback',
       },
-      async(
+      async function(
         _accessToken,
         _refreshToken,
         profile,
         done
-      ) =>{
-        console.log('callback')
+      ){
+        console.log('PROFILE',profile)
+       
         if (!!profile.id) {
           const user = await User.findOne({ email: profile._json.email }).lean();
   
@@ -45,13 +46,19 @@ passport.use(
       }
     )
   );
+  passport.serializeUser(function(user, done) {
+    done(null, user);
+  });
+  
+  passport.deserializeUser(function(user, done) {
+    done(null, user);
+  });
   const addGoogleProfileToUser = async (profile) => {
     try {
       const user = await User.findOneAndUpdate(
         { email: profile._json.email },
         {
-          'externalIds.google': profile.id,
-          'externalProfiles.google': profile._json,
+          'googleId': profile.id,
         },
         { new: true }
       );
