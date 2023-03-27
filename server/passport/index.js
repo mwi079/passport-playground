@@ -67,5 +67,6 @@ passport.use(
       return error;
     }
   };
+  passport.use(User.createStrategy())
 
   module.exports=passport

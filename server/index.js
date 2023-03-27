@@ -11,7 +11,7 @@ app.use(express.json())
 app.use(session({
     secret:'Testing123',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie:{maxAge:1000 * 60 * 60 * 24} //1 day
 }))
 app.use(cors())
