@@ -2,10 +2,10 @@ const express=require('express');
 const connectEnsureLogin=require('connect-ensure-login');
 const router=express.Router();
 const passport=require('../passport')
-const logoutUser=require('../controlers')
+const {logoutUser, authLocal, registerUser}=require('../controlers')
 
-  router.get('/', ((req,res)=>{res.send('Hello world')}))
-// // google login
+  router.get('/', ((_,res)=>{res.send('Hello world')}))
+
   router.get(
     '/auth/google',
     passport.authenticate('google', 
@@ -13,9 +13,7 @@ const logoutUser=require('../controlers')
       scope: ['profile','email'],
       successMessage:true,
       failureMessage: true,
-    })
-
- 
+    }) 
 );
 //   // google redirect
   router.get(
@@ -32,24 +30,11 @@ const logoutUser=require('../controlers')
   );
   router.get('/logout',connectEnsureLogin.ensureLoggedIn() ,logoutUser);
 
-  router.post('/login',(req,res,next)=>{
-    console.log('post',req.body)
-    passport.authenticate('local',
-    (err,user,info)=>{
-      if(err){
-        return next(err);
-      }
-      if(!user){
-        return res.redirect('/login?info='+info);
-      }
-      req.logIn(user,function(err){
-        if(err){
-          return next(err);
-        }
-        return res.redirect('/');
-      })
-    })(req,res,next);
-  })
+  router.post('/login', authLocal)
+
+  router.post('/register',registerUser)
+
+
 
   
 

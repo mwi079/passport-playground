@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export default function Login(){
 
-    const [loginDetails,setLoginDetails]=useState({email:'',password:''})
+    const [userDetails,setUserDetails]=useState({email:'',password:'', name:''})
     //const [error, setError] = useState('');
 
     async function handleLogin(e){
@@ -11,7 +11,7 @@ export default function Login(){
     
         console.log(userDetails)
         try{
-            await axios.post('http://localhost:4000/login',loginDetails)
+            await axios.post('http://localhost:4000/register',userDetails)
         } catch (error){
             console.log(error)
         }
@@ -22,12 +22,12 @@ export default function Login(){
             <center><a href="http://localhost:4000/auth/google"> Google Login</a></center>
             <center>
                 <form onSubmit={handleLogin}>
-                    <input type="email" placeholder="email" onChange={(e)=>setLoginDetails({...loginDetails,email:e.target.value})}></input>
-                    <input type="password" placeholder="password" onChange={(e)=>setLoginDetails({...loginDetails,password:e.target.value})}></input>
+                    <input type='text' placeholder="name" onChange={(e)=>setUserDetails({...userDetails,name:e.target.value})}></input>
+                    <input type="email" placeholder="email" onChange={(e)=>setUserDetails({...userDetails,email:e.target.value})}></input>
+                    <input type="password" placeholder="password" onChange={(e)=>setUserDetails({...userDetails,password:e.target.value})}></input>
                     <button type="submit">Login</button>
                 </form>
             </center>
         </>
     )
 }
-

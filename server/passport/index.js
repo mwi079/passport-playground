@@ -1,6 +1,8 @@
 const passport = require('passport');
+const bcrypt=require('bcrypt');
 require('dotenv').config()
 const GoogleStrategy =require ('passport-google-oauth20').Strategy;
+const LocalStrategy = require('passport-local').Strategy
 const User =require ('../model/schema');
 
 
@@ -67,6 +69,19 @@ passport.use(
       return error;
     }
   };
-  passport.use(User.createStrategy())
+  passport.use(new LocalStrategy(
+    function verify(username,password,cb){
+      User.findOne({email:username},function(err,user){
+        if(!User.validPassword(password)){
+          console.log('Wrong Password')
+          return cb(err)
+        }
+        else{
+          console.log('correct password')
+          return cb(null,user)
+        }
+      })
+    }
+  ))
 
   module.exports=passport
