@@ -8,10 +8,10 @@ export default function Login(){
 
     async function handleLogin(e){
         e.preventDefault()
-    
-        console.log(userDetails)
         try{
             await axios.post('http://localhost:4000/login',loginDetails)
+            const data=await axios.get('http://localhost:4000/checkData')
+            console.log(data)
         } catch (error){
             console.log(error)
         }

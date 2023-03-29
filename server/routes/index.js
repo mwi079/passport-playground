@@ -2,7 +2,7 @@ const express=require('express');
 const connectEnsureLogin=require('connect-ensure-login');
 const router=express.Router();
 const passport=require('../passport')
-const {logoutUser, authLocal, registerUser}=require('../controlers')
+const {logoutUser, registerUser}=require('../controlers')
 
   router.get('/', ((_,res)=>{res.send('Hello world')}))
 
@@ -30,9 +30,12 @@ const {logoutUser, authLocal, registerUser}=require('../controlers')
   );
   router.get('/logout',connectEnsureLogin.ensureLoggedIn() ,logoutUser);
 
-  router.post('/login', authLocal)
+  router.post('/login', (req, res) => passport.authenticate('local', { successRedirect: 'http://localhost:3000/dashboard', failureRedirect: 'http://localhost:3000'})(req, res));
+    //
 
   router.post('/register',registerUser)
+
+  router.get('/checkData',(req,res)=>res.send(req.user))
 
 
 

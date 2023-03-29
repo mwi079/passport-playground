@@ -11,11 +11,12 @@ const userSchema= new mongoose.Schema(
     {autocreate:true}
 );
 
-userSchema.methods.generateHash=function(password){
+userSchema.statics.generateHash=function(password){
+    console.log('generate hash for',password)
     return bcrypt.hashSync(password,bcrypt.genSaltSync(8),null)
 }
 
-userSchema.methods.validPassword=function(password){
+userSchema.statics.validPassword=function(password){
     return bcrypt.compareSync(password,this.password)
 }
 
