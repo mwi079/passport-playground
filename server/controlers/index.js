@@ -3,12 +3,13 @@ const User= require('../model/schema')
 
 function logoutUser (req, res) { //! Create standard "next"
     try {
-      req.session.destroy(() => {
-        return;
-      });
-      res.redirect(`http://localhost:3000`)
-      res.sendStatus(200);
+      console.log('logging out')
+      req.logout(function(err){
+        if(err)res.send(err)
+        res.redirect('http://localhost:3000/')
+      })
     } catch (error) {
+      console.log('error',error)
       res.status(500)
       res.send(error)
     }
@@ -33,5 +34,11 @@ function logoutUser (req, res) { //! Create standard "next"
     }
   }
 
-  module.exports={logoutUser, registerUser}
+  function ensureAuthenticated(req, res) {
+    console.log(req.isAuthenticated())
+    if (req.isAuthenticated()) { return res.send('You are authenticated')  }
+    res.status(500);
+  }
+
+  module.exports={logoutUser, registerUser,ensureAuthenticated}
 

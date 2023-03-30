@@ -48,12 +48,35 @@ passport.use(
     )
   );
   passport.serializeUser(function(user, done) {
+    console.log('serialising')
     done(null, user);
   });
   
   passport.deserializeUser(function(user, done) {
+    console.log('deserialising')
     done(null, user);
   });
+  
+  passport.use(new LocalStrategy(
+    function verify(username,password,done){
+      console.log('local strategy')
+      User.findOne({email:username},function(err,user){
+        if(err){
+          console.log('Wrong Email?')
+          return done(err,false)
+        }
+        if(!user.validPassword(password)){
+          console.log('Wrong Password')
+          return done(err,false)
+        }
+        else{
+          console.log('correct password')
+          return done(null,user)
+        }
+      })
+    }
+  ))
+
   const addGoogleProfileToUser = async (profile) => {
     try {
       const user = await User.findOneAndUpdate(
@@ -68,24 +91,5 @@ passport.use(
       return error;
     }
   };
-  passport.use(new LocalStrategy(
-    function verify(username,password,done){
-      console.log('local strategy')
-      User.findOne({email:username},function(err,user){
-        if(err){
-          console.log('Wrong Email?')
-          return done(err,false)
-        }
-        if(!User.validPassword(password)){
-          console.log('Wrong Password')
-          return done(err,false)
-        }
-        else{
-          console.log('correct password',user)
-          return done(null,user)
-        }
-      })
-    }
-  ))
 
   module.exports=passport

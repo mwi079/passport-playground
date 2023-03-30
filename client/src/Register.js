@@ -1,8 +1,9 @@
 import {useState} from "react";
+import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
 
 export default function Login(){
-
+    const navigate=useNavigate()
     const [userDetails,setUserDetails]=useState({email:'',password:'', name:''})
     //const [error, setError] = useState('');
 
@@ -11,15 +12,14 @@ export default function Login(){
     
         console.log(userDetails)
         try{
-            await axios.post('http://localhost:4000/register',userDetails)
+           await axios.post('http://localhost:4000/register',userDetails)
+           navigate(`/`)
         } catch (error){
             console.log(error)
         }
     }
     return(
         <>
-            <center>You are unauthenticated</center>
-            <center><a href="http://localhost:4000/auth/google"> Google Login</a></center>
             <center>
                 <form onSubmit={handleLogin}>
                     <input type='text' placeholder="name" onChange={(e)=>setUserDetails({...userDetails,name:e.target.value})}></input>

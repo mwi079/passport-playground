@@ -1,8 +1,7 @@
 const express=require('express');
-const connectEnsureLogin=require('connect-ensure-login');
 const router=express.Router();
 const passport=require('../passport')
-const {logoutUser, registerUser}=require('../controlers')
+const {logoutUser, registerUser, ensureAuthenticated}=require('../controlers')
 
   router.get('/', ((_,res)=>{res.send('Hello world')}))
 
@@ -25,17 +24,27 @@ const {logoutUser, registerUser}=require('../controlers')
     function(req,res){
       console.log('Redirect function')
       console.log(req.user._doc)
-      res.redirect(`http://localhost:3000/dashboard/${req.user._doc.googleId}`);
+      res.redirect(`http://localhost:3000/dashboard/${req.user._doc.name}`);
     } 
   );
-  router.get('/logout',connectEnsureLogin.ensureLoggedIn() ,logoutUser);
+  router.get('/logout',logoutUser);
 
-  router.post('/login', (req, res) => passport.authenticate('local', { successRedirect: 'http://localhost:3000/dashboard', failureRedirect: 'http://localhost:3000'})(req, res));
-    //
+  router.post('/login', (req, res,next) => {
+    passport.authenticate('local',function(err,user,info){
+      if(err){
+        res.status(500)
+      }
+      else{
+        res.send(user)
+      }
+    })(req, res,next)}
+  )
 
   router.post('/register',registerUser)
 
   router.get('/checkData',(req,res)=>res.send(req.user))
+
+  router.get('/checkAuth',ensureAuthenticated)
 
 
 

@@ -8,17 +8,14 @@ const port=4000;
 const app=express()
 
 app.use(express.json())
+app.use(express.urlencoded({extended:false}))
 app.use(session({
     secret:'Testing123',
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     cookie:{maxAge:1000 * 60 * 60 * 24} //1 day
 }))
 app.use(cors())
-
-app.use(router)
-
-
 
 // Configure passport middleware
 app.set('trust proxy', 1) 
@@ -26,7 +23,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-
+app.use(router)
 
 const server=app.listen(port,()=>{
     console.log(`Port:${port}`)
