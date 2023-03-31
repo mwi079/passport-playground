@@ -48,12 +48,12 @@ passport.use(
     )
   );
   passport.serializeUser(function(user, done) {
-    console.log('serialising')
+    console.log('serialising',user)
     done(null, user);
   });
   
   passport.deserializeUser(function(user, done) {
-    console.log('deserialising')
+    console.log('deserialising',user)
     done(null, user);
   });
   

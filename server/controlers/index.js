@@ -3,7 +3,7 @@ const User= require('../model/schema')
 
 function logoutUser (req, res) { //! Create standard "next"
     try {
-      console.log('logging out')
+      console.log('logging out', req.user)
       req.logout(function(err){
         if(err)res.send(err)
         res.redirect('http://localhost:3000/')
@@ -14,11 +14,6 @@ function logoutUser (req, res) { //! Create standard "next"
       res.send(error)
     }
   };
-
-  // function authLocal (req,res){
-  //   console.log('auth local')
-    
-  // } 
 
   async function registerUser (req,res){
     try{
@@ -34,11 +29,20 @@ function logoutUser (req, res) { //! Create standard "next"
     }
   }
 
-  function ensureAuthenticated(req, res) {
-    console.log(req.isAuthenticated())
-    if (req.isAuthenticated()) { return res.send('You are authenticated')  }
-    res.status(500);
+  function checkAuthenticated(req, res,next) {
+    console.log('i am checking if i am authenticated')
+    console.log('req.passport',req.passport)
+    console.log('req.user',req.user)
+    if (req.isAuthenticated()) { 
+      console.log('i am authenticated')
+      return next()  
+    }
+    
+    else {
+      console.log('i am not authenticated');
+      return res.redirect('/')
+    }
   }
 
-  module.exports={logoutUser, registerUser,ensureAuthenticated}
+  module.exports={logoutUser, registerUser,checkAuthenticated}
 

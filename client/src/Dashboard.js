@@ -7,13 +7,17 @@ import axios from "axios";
 export default function Dashboard(){
 
     useEffect(()=>{
+        console.log('dashboard useEffect')
+        async function checkAuth () {
+            
+           
+            const user=await axios.get('http://localhost:4000/checkData',{ withCredentials: true})
+            console.log('dashboard',user)
+        }
         checkAuth()
     },[])
 
-    async function checkAuth () {
-        const auth=await axios.get('http://localhost:4000/checkAuth',{ withCredentials: true })
-        console.log(auth)
-    }
+    
 
     return(
         <>

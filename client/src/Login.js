@@ -10,11 +10,12 @@ export default function Login(){
     async function handleLogin(e){
         e.preventDefault()
         try{
-            const {data}=await axios.post('http://localhost:4000/login',loginDetails)
-            console.log(data)
-            console.log(await axios.post('http://localhost:4000/checkAuth'))
-            if(data) navigate(`/dashboard/${data.name}`)
-            else throw Error('No user')
+            const response=await axios.post('http://localhost:4000/login',loginDetails)
+            if(response.status===200){
+                navigate('/dashboard')
+            }
+
+
         } catch (error){
             console.log(error)
         }
